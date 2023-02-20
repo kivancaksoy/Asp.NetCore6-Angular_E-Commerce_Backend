@@ -1,4 +1,5 @@
 using ECommerceBE.Application.Validators.Products;
+using ECommerceBE.Infrastructure;
 using ECommerceBE.Infrastructure.Filters;
 using ECommerceBE.Persistence;
 using FluentValidation.AspNetCore;
@@ -13,6 +14,7 @@ namespace ECommerceBE.API
 
             // Add services to the container.
             builder.Services.AddPersistenceServices();
+            builder.Services.AddInfrastructureServices();
 
             builder.Services.AddCors(options => options.AddDefaultPolicy(policy => 
                 policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
