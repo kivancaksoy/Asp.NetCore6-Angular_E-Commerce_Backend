@@ -35,6 +35,9 @@ namespace ECommerceBE.API
                 app.UseSwaggerUI();
             }
 
+            //wwwroot dizinine eriþebilmek için eklenmeli.
+            app.UseStaticFiles();
+
             app.UseCors();
 
             app.UseHttpsRedirection();
