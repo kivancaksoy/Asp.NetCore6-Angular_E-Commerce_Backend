@@ -12,6 +12,7 @@ namespace ECommerceBE.Domain.Entities
     {
         public string Filename { get; set; }
         public string Path { get; set; }
+        public string Storage { get; set; }
         [NotMapped]
         public override DateTime UpdatedDate { get => base.UpdatedDate; set => base.UpdatedDate = value; }
     }
