@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerceBE.Infrastructure.Services
+namespace ECommerceBE.Infrastructure.Services.Storage
 {
     public class StorageService : IStorageService
     {
@@ -23,7 +23,7 @@ namespace ECommerceBE.Infrastructure.Services
             => await _storage.DeleteAsync(pathOrContainerName, fileName);
 
         public List<string> GetFiles(string pathOrContainerName)
-            =>  _storage.GetFiles(pathOrContainerName);
+            => _storage.GetFiles(pathOrContainerName);
 
         public bool HasFile(string pathOrContainerName, string fileName)
             => _storage.HasFile(pathOrContainerName, fileName);
