@@ -108,44 +108,36 @@ namespace ECommerceBE.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Upload()
+        public async Task<IActionResult> Upload(string id)
         {
-            var datas = await _storageService.UploadAsync("files", Request.Form.Files);
 
             //Test
-            //var datas = await _fileService.UploadAsync("resource/product-images", Request.Form.Files);
-            await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile()
+            List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("photo-images", Request.Form.Files);
+
+
+            Product product = await _productReadRepository.GetByIdAsync(id);
+
+            /*//aşağıdakinin alternatifi
+            foreach (var r in result)
             {
-                Filename = d.fileName,
-                Path = d.pathOrContainer,
-                Storage = _storageService.StorageName
+                product.ProductImageFiles.Add(new()
+                {
+                    Filename = r.fileName,
+                    Path = r.pathOrContainerName,
+                    Storage = _storageService.StorageName,
+                    Products = new List<Product>() { product }
+                });
+            }*/
+
+            await _productImageFileWriteRepository.AddRangeAsync(result.Select(r => new ProductImageFile()
+            {
+                Filename = r.fileName,
+                Path = r.pathOrContainerName,
+                Storage = _storageService.StorageName,
+                Products = new List<Product>() { product }
             }).ToList());
 
             await _productImageFileWriteRepository.SaveAsync();
-
-            //var datas = await _fileService.UploadAsync("resource/invoices", Request.Form.Files);
-            //_invoiceFileWriteRepository.AddRangeAsync(datas.Select(d => new InvoiceFile()
-            //{
-            //    Filename = d.fileName,
-            //    Path = d.path,
-            //    Price = new Random().Next()
-            //}).ToList());
-
-            //await _invoiceFileWriteRepository.SaveAsync();
-
-
-            //var datas = await _fileService.UploadAsync("resource/files", Request.Form.Files);
-            //_fileWriteRepository.AddRangeAsync(datas.Select(d => new Domain.Entities.File()
-            //{
-            //    Filename = d.fileName,
-            //    Path = d.path
-            //}).ToList());
-
-            //await _fileWriteRepository.SaveAsync();
-
-            //var d1 = _fileReadRepository.GetAll(false);
-            //var d2 = _invoiceFileReadRepository.GetAll(false);
-            //var d3 = _productImageFileReadRepository.GetAll(false);
 
             return Ok();
         }

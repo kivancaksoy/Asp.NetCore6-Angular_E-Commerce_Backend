@@ -62,7 +62,7 @@ namespace ECommerceBE.Infrastructure.Services.Storage.Azure
                 //IFormFile'ı OpenReadStream ile streame dönüştürdük.
                 //Upload ile Azure'a gönderildi.
                 await blobClient.UploadAsync(file.OpenReadStream());
-                datas.Add((fileNewName, containerName));
+                datas.Add((fileNewName, $"{containerName}\\{fileNewName}"));
             }
             return datas;
         }

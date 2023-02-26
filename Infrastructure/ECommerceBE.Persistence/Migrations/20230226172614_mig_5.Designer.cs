@@ -3,6 +3,7 @@ using System;
 using ECommerceBE.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerceBE.Persistence.Migrations
 {
     [DbContext(typeof(ECommerceBEDbContext))]
-    partial class ECommerceBEDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230226172614_mig_5")]
+    partial class mig_5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,21 +152,6 @@ namespace ECommerceBE.Persistence.Migrations
                     b.ToTable("OrderProduct");
                 });
 
-            modelBuilder.Entity("ProductProductImageFile", b =>
-                {
-                    b.Property<Guid>("ProductImageFilesId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ProductsId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("ProductImageFilesId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("ProductProductImageFile");
-                });
-
             modelBuilder.Entity("ECommerceBE.Domain.Entities.InvoiceFile", b =>
                 {
                     b.HasBaseType("ECommerceBE.Domain.Entities.File");
@@ -177,6 +165,11 @@ namespace ECommerceBE.Persistence.Migrations
             modelBuilder.Entity("ECommerceBE.Domain.Entities.ProductImageFile", b =>
                 {
                     b.HasBaseType("ECommerceBE.Domain.Entities.File");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.HasIndex("ProductId");
 
                     b.HasDiscriminator().HasValue("ProductImageFile");
                 });
@@ -207,24 +200,25 @@ namespace ECommerceBE.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProductProductImageFile", b =>
+            modelBuilder.Entity("ECommerceBE.Domain.Entities.ProductImageFile", b =>
                 {
-                    b.HasOne("ECommerceBE.Domain.Entities.ProductImageFile", null)
-                        .WithMany()
-                        .HasForeignKey("ProductImageFilesId")
+                    b.HasOne("ECommerceBE.Domain.Entities.Product", "Product")
+                        .WithMany("ProductImageFiles")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ECommerceBE.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ECommerceBE.Domain.Entities.Customer", b =>
                 {
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("ECommerceBE.Domain.Entities.Product", b =>
+                {
+                    b.Navigation("ProductImageFiles");
                 });
 #pragma warning restore 612, 618
         }

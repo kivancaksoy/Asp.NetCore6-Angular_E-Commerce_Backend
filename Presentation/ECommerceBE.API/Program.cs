@@ -20,9 +20,9 @@ namespace ECommerceBE.API
             builder.Services.AddInfrastructureServices();
 
             //builder.Services.AddStorage();
-            //builder.Services.AddStorage<LocalStorage>();
+            //aþaðýdaki enum ile olan tanýmlamayý genelde kullanmýyoruz(yeni nesneler için koda müdahale olduðundan ötürü), generic yapý kullanýlýyor.
             //builder.Services.AddStorage(StorageType.Local);
-
+            //builder.Services.AddStorage<LocalStorage>();
             builder.Services.AddStorage<AzureStorage>();
 
             builder.Services.AddCors(options => options.AddDefaultPolicy(policy => 
