@@ -1,3 +1,4 @@
+using ECommerceBE.Application;
 using ECommerceBE.Application.Validators.Products;
 using ECommerceBE.Infrastructure;
 using ECommerceBE.Infrastructure.Enums;
@@ -18,6 +19,7 @@ namespace ECommerceBE.API
             // Add services to the container.
             builder.Services.AddPersistenceServices();
             builder.Services.AddInfrastructureServices();
+            builder.Services.AddApplicationServices();
 
             //builder.Services.AddStorage();
             //aþaðýdaki enum ile olan tanýmlamayý genelde kullanmýyoruz(yeni nesneler için koda müdahale olduðundan ötürü), generic yapý kullanýlýyor.
