@@ -24,6 +24,7 @@ namespace ECommerceBE.Persistence
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase= false;
                 options.Password.RequireUppercase= false;
+                options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<ECommerceBEDbContext>();
 
             services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
