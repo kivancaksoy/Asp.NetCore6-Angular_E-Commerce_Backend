@@ -1,4 +1,6 @@
-﻿using ECommerceBE.Application.Exceptions;
+﻿using ECommerceBE.Application.Abstraction.Token;
+using ECommerceBE.Application.DTOs;
+using ECommerceBE.Application.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -13,17 +15,19 @@ namespace ECommerceBE.Application.Features.Commands.AppUser.LoginUser
     {
         readonly UserManager<Domain.Entities.Identity.AppUser> _userManager;
         readonly SignInManager<Domain.Entities.Identity.AppUser> _signInManager;
+        readonly ITokenHandler _tokenHanler;
 
-        public LoginUserCommandHandler(UserManager<Domain.Entities.Identity.AppUser> userManager, SignInManager<Domain.Entities.Identity.AppUser> signInManager)
+        public LoginUserCommandHandler(UserManager<Domain.Entities.Identity.AppUser> userManager, SignInManager<Domain.Entities.Identity.AppUser> signInManager, ITokenHandler tokenHanler)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _tokenHanler = tokenHanler;
         }
 
         public async Task<LoginUserCommandResponse> Handle(LoginUserCommandRequest request, CancellationToken cancellationToken)
         {
             Domain.Entities.Identity.AppUser user = await _userManager.FindByNameAsync(request.UsernameOrEmail);
-            if(user == null) 
+            if (user == null)
                 user = await _userManager.FindByEmailAsync(request.UsernameOrEmail);
 
             if (user == null)
@@ -32,12 +36,22 @@ namespace ECommerceBE.Application.Features.Commands.AppUser.LoginUser
             }
 
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-            if (result.Succeeded)
+            if (result.Succeeded)  //authentication başarılı.
             {
-                //yetkiler belirlenir.
+                Token token = _tokenHanler.CreateAccessToken(5);
+                return new LoginUserSuccessCommandResponse()
+                {
+                    Token = token
+                };
             }
 
-            return new();
+            //return new LoginUserErrorCommandResponse()
+            //{
+            //    Message = "Kullanıcı adı veya şifre hatalıdır."
+            //};
+
+            throw new AuthencticationErrorException();
+           
         }
     }
 }

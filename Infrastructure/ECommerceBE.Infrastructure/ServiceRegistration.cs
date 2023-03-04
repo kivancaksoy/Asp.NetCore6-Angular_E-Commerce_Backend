@@ -1,9 +1,11 @@
 ﻿
 using ECommerceBE.Application.Abstraction.Storage;
+using ECommerceBE.Application.Abstraction.Token;
 using ECommerceBE.Infrastructure.Enums;
 using ECommerceBE.Infrastructure.Services.Storage;
 using ECommerceBE.Infrastructure.Services.Storage.Azure;
 using ECommerceBE.Infrastructure.Services.Storage.Local;
+using ECommerceBE.Infrastructure.Services.Token;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,7 @@ namespace ECommerceBE.Infrastructure
         public static void AddInfrastructureServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IStorageService, StorageService>();
+            serviceCollection.AddScoped<ITokenHandler, TokenHandler>();
         }
 
         //genelikle enum yerine bu şekilde kullanım tercih edilir. Daha temiz bir codedur.
