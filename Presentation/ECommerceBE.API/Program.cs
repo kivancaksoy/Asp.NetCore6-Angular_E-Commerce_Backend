@@ -7,6 +7,8 @@ using ECommerceBE.Infrastructure.Services.Storage.Azure;
 using ECommerceBE.Infrastructure.Services.Storage.Local;
 using ECommerceBE.Persistence;
 using FluentValidation.AspNetCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ECommerceBE.API
 {
@@ -38,6 +40,29 @@ namespace ECommerceBE.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddAuthentication("Admin")
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new()
+                    {
+                        //oluþturulacak token deðerini kimlerin/hangi originlerin/sitelerin kullanýcaðýný velirlediðimiz deðerdir. -> www.bilmemne.com
+                        ValidateAudience = true,
+
+                        //oluþturulacak token deðerini kimin daðýttýðýný ifade edeceðimiz alandýr. -> www.myapi.com
+                        ValidateIssuer = true,
+
+                        //oluþturulacak token deðerinin süresini kontrol edecek olan doðrulamadýr.
+                        ValidateLifetime = true,
+
+                        //üretilecek token deðerinin uygulamamýza ait bir deðer olduðunu ifade eden security key verisinin doðrulanmasýdýr.
+                        ValidateIssuerSigningKey = true,
+
+                        ValidAudience = builder.Configuration["Token:Audince"],
+                        ValidIssuer = builder.Configuration["Token:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
+                    };
+                });
 
             var app = builder.Build();
 
