@@ -1,12 +1,8 @@
 ﻿using ECommerceBE.Application.Abstraction.Token;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerceBE.Infrastructure.Services.Token
 {
@@ -19,7 +15,7 @@ namespace ECommerceBE.Infrastructure.Services.Token
             _configuration = configuration;
         }
 
-        public Application.DTOs.Token CreateAccessToken(int minute)
+        public Application.DTOs.Token CreateAccessToken(int second)
         {
             Application.DTOs.Token token = new();
 
@@ -30,7 +26,7 @@ namespace ECommerceBE.Infrastructure.Services.Token
             SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256);
 
             //oluşturulacak token ayarlarını veriyoruz.
-            token.Expiration = DateTime.UtcNow.AddMinutes(minute);
+            token.Expiration = DateTime.UtcNow.AddMinutes(second);
             JwtSecurityToken securityToken = new(
                 audience: _configuration["Token:Audince"],
                 issuer: _configuration["Token:Issuer"],

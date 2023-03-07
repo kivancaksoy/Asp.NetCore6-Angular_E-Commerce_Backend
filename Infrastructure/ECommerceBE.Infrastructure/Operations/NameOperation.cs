@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ECommerceBE.Infrastructure.Operations
+﻿namespace ECommerceBE.Infrastructure.Operations
 {
     public static class NameOperation
     {

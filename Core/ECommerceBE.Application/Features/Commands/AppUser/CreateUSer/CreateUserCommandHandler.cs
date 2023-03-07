@@ -1,51 +1,34 @@
-﻿using ECommerceBE.Application.Exceptions;
+﻿using ECommerceBE.Application.Abstraction.Services;
+using ECommerceBE.Application.DTOs.User;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerceBE.Application.Features.Commands.AppUser.CreateUSer
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResponse>
     {
-        readonly UserManager<Domain.Entities.Identity.AppUser> _userManager;
+        readonly IUserService _userService;
 
-        public CreateUserCommandHandler(UserManager<Domain.Entities.Identity.AppUser> userManager)
+        public CreateUserCommandHandler(IUserService userService)
         {
-            _userManager = userManager;
+            _userService = userService;
         }
 
         public async Task<CreateUserCommandResponse> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
         {
-            IdentityResult result = await _userManager.CreateAsync(new()
+            CreateUserResponse response = await _userService.CreateAsync(new()
             {
-                Id = Guid.NewGuid().ToString(),
-                UserName = request.Username,
                 Email = request.Email,
                 NameSurname = request.NameSurname,
-            }, request.Password);
+                Username = request.Username,
+                Password = request.Password,
+                PasswordConfirm = request.PasswordConfirm,
+            });
 
-            CreateUserCommandResponse response = new CreateUserCommandResponse() { Succeeded = result.Succeeded };
-
-            if (result.Succeeded)
+            return new()
             {
-                response.Message = "Kullanıcı başarıyla oluşturulmuştur.";
-            }
-            else
-            {
-                foreach (var error in result.Errors)
-                {
-                    response.Message += $"{error.Code} - {error.Description}\n";
-                }
-            }
-
-            return response;
-                        
-            //throw new UserCreateFailedException();
-
+                Message= response.Message,
+                Succeeded= response.Succeeded,
+            };
         }
     }
 }

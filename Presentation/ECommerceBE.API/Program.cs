@@ -1,10 +1,8 @@
 using ECommerceBE.Application;
 using ECommerceBE.Application.Validators.Products;
 using ECommerceBE.Infrastructure;
-using ECommerceBE.Infrastructure.Enums;
 using ECommerceBE.Infrastructure.Filters;
 using ECommerceBE.Infrastructure.Services.Storage.Azure;
-using ECommerceBE.Infrastructure.Services.Storage.Local;
 using ECommerceBE.Persistence;
 using FluentValidation;
 using FluentValidation.AspNetCore;

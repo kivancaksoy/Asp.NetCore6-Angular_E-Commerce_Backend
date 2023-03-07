@@ -7,11 +7,6 @@ using ECommerceBE.Infrastructure.Services.Storage.Azure;
 using ECommerceBE.Infrastructure.Services.Storage.Local;
 using ECommerceBE.Infrastructure.Services.Token;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerceBE.Infrastructure
 {

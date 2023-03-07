@@ -1,14 +1,12 @@
-﻿using ECommerceBE.Persistence.Contexts;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using ECommerceBE.Application.Abstraction.Services;
+using ECommerceBE.Application.Abstraction.Services.Authentications;
 using ECommerceBE.Application.Repositories;
-using ECommerceBE.Persistence.Repositories;
 using ECommerceBE.Domain.Entities.Identity;
+using ECommerceBE.Persistence.Contexts;
+using ECommerceBE.Persistence.Repositories;
+using ECommerceBE.Persistence.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ECommerceBE.Persistence
 {
@@ -44,6 +42,11 @@ namespace ECommerceBE.Persistence
 
             services.AddScoped<IInvoiceFileReadRepository, InvoiceFileReadRepository>();
             services.AddScoped<IInvoiceFileWriteRepository, InoiveFileWriteRepository>();
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IExternalAuthentication, AuthService>();
+            services.AddScoped<IInternalAuthentication, AuthService>();
         }
     }
 }
