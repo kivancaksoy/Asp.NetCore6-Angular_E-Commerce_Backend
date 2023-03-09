@@ -1,3 +1,4 @@
+using ECommerceBE.API.Configurations.ColumnWriters;
 using ECommerceBE.Application;
 using ECommerceBE.Application.Validators.Products;
 using ECommerceBE.Infrastructure;
@@ -7,7 +8,13 @@ using ECommerceBE.Persistence;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Context;
+using Serilog.Core;
+using Serilog.Sinks.PostgreSQL;
+using System.Security.Claims;
 using System.Text;
 
 namespace ECommerceBE.API
@@ -29,10 +36,48 @@ namespace ECommerceBE.API
             //builder.Services.AddStorage<LocalStorage>();
             builder.Services.AddStorage<AzureStorage>();
 
-            builder.Services.AddCors(options => options.AddDefaultPolicy(policy => 
+            builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
                 policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
                 .AllowAnyHeader().AllowAnyMethod()
             ));
+
+
+
+            //serilog mekanizmasý
+            Logger log = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("logs/log.txt")
+                .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("PostgreSQL"), "logs",
+                    needAutoCreateTable: true,
+                    columnOptions: new Dictionary<string, ColumnWriterBase>
+                    {
+                        {"message", new RenderedMessageColumnWriter()},
+                        {"message_template", new MessageTemplateColumnWriter()},
+                        {"level", new LevelColumnWriter()},
+                        {"time_stamp", new TimestampColumnWriter()},
+                        {"exception", new ExceptionColumnWriter()},
+                        {"log_event", new LogEventSerializedColumnWriter()},
+                        {"user_name", new UsernameColumnWriter()}
+                    })
+                .WriteTo.Seq(builder.Configuration["Seq:ServerURL"])
+                .Enrich.FromLogContext()
+                .MinimumLevel.Information()
+                .CreateLogger();
+
+            //built-in'deki log mekanýzmasý ile serilog deðiþtirildi. Artýk built-indeki kullanýlmýcak.
+            builder.Host.UseSerilog(log);
+
+            builder.Services.AddHttpLogging(logging =>
+            {
+                logging.LoggingFields = HttpLoggingFields.All;
+                logging.RequestHeaders.Add("sec-ch-ua");
+                logging.MediaTypeOptions.AddText("application/javascript");
+                logging.RequestBodyLogLimit = 4096;
+                logging.ResponseBodyLogLimit = 4096;
+
+            });
+
+
 
             //builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
             //    .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>())
@@ -69,7 +114,10 @@ namespace ECommerceBE.API
                         ValidAudience = builder.Configuration["Token:Audince"],
                         ValidIssuer = builder.Configuration["Token:Issuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
-                        LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires != null ? expires > DateTime.UtcNow : false
+                        LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires != null ? expires > DateTime.UtcNow : false,
+
+                        //JWT üzerinde Name claimne karþýlýk gelen deðeri User.Identity.Name propertysinden elde edebiliriz.
+                        NameClaimType = ClaimTypes.Name
                     };
                 });
 
@@ -82,8 +130,15 @@ namespace ECommerceBE.API
                 app.UseSwaggerUI();
             }
 
+            
+
             //wwwroot dizinine eriþebilmek için eklenmeli.
             app.UseStaticFiles();
+
+            //kendisinden sonraki middlewareleri loglatýyor.
+            app.UseSerilogRequestLogging();
+
+            app.UseHttpLogging();
 
             app.UseCors();
 
@@ -92,6 +147,15 @@ namespace ECommerceBE.API
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.Use(async (context, next) =>
+            {
+                var username = context.User?.Identity?.IsAuthenticated != null || false ? context.User.Identity.Name : null;
+
+                LogContext.PushProperty("user_name", username);
+
+                await next();
+            });
 
 
             app.MapControllers();
