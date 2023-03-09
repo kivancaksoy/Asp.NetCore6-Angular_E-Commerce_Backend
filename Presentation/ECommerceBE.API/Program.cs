@@ -1,4 +1,5 @@
 using ECommerceBE.API.Configurations.ColumnWriters;
+using ECommerceBE.API.Extensions;
 using ECommerceBE.Application;
 using ECommerceBE.Application.Validators.Products;
 using ECommerceBE.Infrastructure;
@@ -130,7 +131,9 @@ namespace ECommerceBE.API
                 app.UseSwaggerUI();
             }
 
-            
+
+            //Global exception handler
+            app.ConfigureExceptionHandler<Program>(app.Services.GetRequiredService<ILogger<Program>>());
 
             //wwwroot dizinine eriþebilmek için eklenmeli.
             app.UseStaticFiles();
@@ -150,7 +153,7 @@ namespace ECommerceBE.API
 
             app.Use(async (context, next) =>
             {
-                var username = context.User?.Identity?.IsAuthenticated != null || false ? context.User.Identity.Name : null;
+                var username = context.User?.Identity?.IsAuthenticated != null || true ? context.User.Identity.Name : null;
 
                 LogContext.PushProperty("user_name", username);
 

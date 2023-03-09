@@ -20,6 +20,8 @@ namespace ECommerceBE.Application.Features.Queries.Product.GetAllProduct
         public async Task<GetAllProductQueryResponse> Handle(GetAllProductQueryRequest request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get all products");
+            //global exception handler testi için hata fırlatıyoruz.
+            throw new Exception("Hata alındı...!!");
             var totalCount = _productReadRepository.GetAll(false).Count();
             var products = _productReadRepository.GetAll(false)
                 .Skip(request.Page * request.Size)
