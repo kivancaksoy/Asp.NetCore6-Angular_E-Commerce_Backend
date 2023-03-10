@@ -6,6 +6,7 @@ using ECommerceBE.Infrastructure;
 using ECommerceBE.Infrastructure.Filters;
 using ECommerceBE.Infrastructure.Services.Storage.Azure;
 using ECommerceBE.Persistence;
+using ECommerceBE.SignalR;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -30,6 +31,7 @@ namespace ECommerceBE.API
             builder.Services.AddPersistenceServices();
             builder.Services.AddInfrastructureServices();
             builder.Services.AddApplicationServices();
+            builder.Services.AddSignalRServices();
 
             //builder.Services.AddStorage();
             //aþaðýdaki enum ile olan tanýmlamayý genelde kullanmýyoruz(yeni nesneler için koda müdahale olduðundan ötürü), generic yapý kullanýlýyor.
@@ -39,7 +41,7 @@ namespace ECommerceBE.API
 
             builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
                 policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
-                .AllowAnyHeader().AllowAnyMethod()
+                .AllowAnyHeader().AllowAnyMethod().AllowCredentials()
             ));
 
 
@@ -162,6 +164,8 @@ namespace ECommerceBE.API
 
 
             app.MapControllers();
+
+            app.MapHubs();
 
             app.Run();
         }
