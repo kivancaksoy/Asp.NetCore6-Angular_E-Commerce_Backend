@@ -131,11 +131,8 @@ namespace ECommerceBE.API
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
-
-
-            //Global exception handler
-            app.ConfigureExceptionHandler<Program>(app.Services.GetRequiredService<ILogger<Program>>());
+            }            
+            
 
             //wwwroot dizinine eriþebilmek için eklenmeli.
             app.UseStaticFiles();
@@ -144,6 +141,9 @@ namespace ECommerceBE.API
             app.UseSerilogRequestLogging();
 
             app.UseHttpLogging();
+
+            //Global exception handler (Seriallog MW'sinden sonra eklendi. önce eklenirse loglanmýyor!!)
+            app.ConfigureExceptionHandler<Program>(app.Services.GetRequiredService<ILogger<Program>>());
 
             app.UseCors();
 
