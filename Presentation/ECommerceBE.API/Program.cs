@@ -28,6 +28,7 @@ namespace ECommerceBE.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddHttpContextAccessor(); // client'tan gele nrequest neticesinde oluþturulan HTTPcontext nesnesine katmanlardaki class'lar üzerinden(business logic) eriþebilmemizi saðlayan bir servistir.
             builder.Services.AddPersistenceServices();
             builder.Services.AddInfrastructureServices();
             builder.Services.AddApplicationServices();

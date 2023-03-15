@@ -53,6 +53,8 @@ namespace ECommerceBE.Persistence
 
             services.AddScoped<IBasketItemWriteRepository, BasketItemWriteRepository>();
             services.AddScoped<IBasketItemReadRepository, BasketItemReadRepository>();
+
+            services.AddScoped<IBasketService, BasketService>();
         }
     }
 }
