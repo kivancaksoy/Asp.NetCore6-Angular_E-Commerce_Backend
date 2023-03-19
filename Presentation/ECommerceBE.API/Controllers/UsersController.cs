@@ -29,7 +29,7 @@ namespace ECommerceBE.API.Controllers
         [HttpGet]
         public async Task<IActionResult> ExampleMailTest()
         {
-            await _mailService.SendMessageAsync("pythonders3@gmail.com", "Örnek Mail", "<strong>Bu bir örnek maildir.</strong>");
+            await _mailService.SendMailAsync("pythonders3@gmail.com", "Örnek Mail", "<strong>Bu bir örnek maildir.</strong>");
             return Ok();
         }
 
