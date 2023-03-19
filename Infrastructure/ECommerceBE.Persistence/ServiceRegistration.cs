@@ -5,6 +5,7 @@ using ECommerceBE.Domain.Entities.Identity;
 using ECommerceBE.Persistence.Contexts;
 using ECommerceBE.Persistence.Repositories;
 using ECommerceBE.Persistence.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,10 +21,12 @@ namespace ECommerceBE.Persistence
                 options.Password.RequiredLength = 3;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireDigit = false;
-                options.Password.RequireLowercase= false;
-                options.Password.RequireUppercase= false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
                 options.User.RequireUniqueEmail = true;
-            }).AddEntityFrameworkStores<ECommerceBEDbContext>();
+            }).AddEntityFrameworkStores<ECommerceBEDbContext>()
+            //Identity üzerinden _userManager.GeneratePasswordResetTokenAsync'yi kullanarak reset token üretebilmemiş için aşağıdaki AddDefaultTokenProviders servisini de ekledik.
+            .AddDefaultTokenProviders();
 
             services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
             services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();

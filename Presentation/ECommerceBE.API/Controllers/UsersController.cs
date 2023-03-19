@@ -1,5 +1,6 @@
 ﻿using ECommerceBE.Application.Abstraction.Services;
 using ECommerceBE.Application.Features.Commands.AppUser.CreateUSer;
+using ECommerceBE.Application.Features.Commands.AppUser.UpdatePassword;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,11 +26,10 @@ namespace ECommerceBE.API.Controllers
             return Ok(response);
         }
 
-        //mail göndeirmi testi için oluşturuldu.
-        [HttpGet]
-        public async Task<IActionResult> ExampleMailTest()
+        [HttpPost("update-password")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordCommandRequest updatePasswordCommandRequest)
         {
-            await _mailService.SendMailAsync("pythonders3@gmail.com", "Örnek Mail", "<strong>Bu bir örnek maildir.</strong>");
+            UpdatePasswordCommandResponse response = await _mediator.Send(updatePasswordCommandRequest);
             return Ok();
         }
 
