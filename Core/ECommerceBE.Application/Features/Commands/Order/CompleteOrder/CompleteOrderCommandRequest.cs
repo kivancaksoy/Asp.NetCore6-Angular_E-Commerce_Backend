@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace ECommerceBE.Application.Features.Commands.CompleteOrder
+namespace ECommerceBE.Application.Features.Commands.Order.CompleteOrder
 {
     public class CompleteOrderCommandRequest : IRequest<CompleteOrderCommandResponse>
     {

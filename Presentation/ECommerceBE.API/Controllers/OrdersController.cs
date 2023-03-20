@@ -1,10 +1,9 @@
-﻿using ECommerceBE.Application.Features.Commands.CompleteOrder;
+﻿using ECommerceBE.Application.Features.Commands.Order.CompleteOrder;
 using ECommerceBE.Application.Features.Commands.Order.CreateOrder;
 using ECommerceBE.Application.Features.Queries.Order.GetAllOrders;
 using ECommerceBE.Application.Features.Queries.Order.GetOrderById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceBE.API.Controllers
