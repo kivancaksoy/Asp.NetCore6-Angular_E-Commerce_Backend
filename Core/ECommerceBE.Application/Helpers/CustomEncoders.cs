@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace ECommerceBE.Application.Helpers
 {
+    //Todo incele
     public static class CustomEncoders
     {
+        //string 'i extend ettiği için tüm stringlerde bu fonksiyonlar gelcek.
         public static string UrlEncode(this string value)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(value);

@@ -1,4 +1,7 @@
 ﻿using ECommerceBE.Application.Abstraction.Services.Configurations;
+using ECommerceBE.Application.CustomAttributes;
+using ECommerceBE.Application.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,6 +9,7 @@ namespace ECommerceBE.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public class ApplicationServicesController : ControllerBase
     {
         readonly IApplicationService _applicationService;
@@ -16,6 +20,7 @@ namespace ECommerceBE.API.Controllers
         }
 
         [HttpGet]
+        [AuthorizeDefinition(ActionType = ActionType.Reading, Definition = "Get Authorize Definition Endpoints", Menu = "Application Services")]
         public IActionResult GetAuthorizeDefinitionEndpoints()
         {
             var datas = _applicationService.GetAuthorizeDefinitionEndpoints(typeof(Program));
