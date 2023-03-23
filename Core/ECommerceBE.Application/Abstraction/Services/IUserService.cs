@@ -12,6 +12,7 @@ namespace ECommerceBE.Application.Abstraction.Services
         int TotalUsersCount { get; }
 
         Task AssignRoleToUserAsync(string userId, string[] roles);
-        Task<string[]> GetRolesToUserAsync(string userId);
+        Task<string[]> GetRolesToUserAsync(string userIdOrName);
+        Task<bool> HasRolePermissionToEnpointAsync(string name, string code);
     }
 }

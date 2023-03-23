@@ -1,5 +1,6 @@
 using ECommerceBE.API.Configurations.ColumnWriters;
 using ECommerceBE.API.Extensions;
+using ECommerceBE.API.Filters;
 using ECommerceBE.Application;
 using ECommerceBE.Application.Validators.Products;
 using ECommerceBE.Infrastructure;
@@ -88,7 +89,11 @@ namespace ECommerceBE.API
             //    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
 
 
-            builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<ValidationFilter>();
+                options.Filters.Add<RolePermissionFilter>();
+            })
                 .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
             builder.Services.AddFluentValidationAutoValidation()
                 .AddFluentValidationClientsideAdapters()
@@ -132,8 +137,8 @@ namespace ECommerceBE.API
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }            
-            
+            }
+
 
             //wwwroot dizinine eriþebilmek için eklenmeli.
             app.UseStaticFiles();
