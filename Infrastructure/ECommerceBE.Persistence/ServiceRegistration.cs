@@ -73,6 +73,8 @@ namespace ECommerceBE.Persistence
             services.AddScoped<IMenuWriteepository, MenuWriteRepository>();
 
             services.AddScoped<IAuthorizationEndpointService, AuthorizationEndpointService>();
+
+            services.AddScoped<IProductService, ProductService>();
         }
     }
 }

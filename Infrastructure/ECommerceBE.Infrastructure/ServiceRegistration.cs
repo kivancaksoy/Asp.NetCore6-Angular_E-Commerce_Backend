@@ -22,6 +22,7 @@ namespace ECommerceBE.Infrastructure
             serviceCollection.AddScoped<ITokenHandler, TokenHandler>();
             serviceCollection.AddScoped<IMailService, MailService>();
             serviceCollection.AddScoped<IApplicationService, ApplicationService>();
+            serviceCollection.AddScoped<IQRCodeService, QRCodeService>();
         }
 
         //genelikle enum yerine bu şekilde kullanım tercih edilir. Daha temiz bir codedur.
