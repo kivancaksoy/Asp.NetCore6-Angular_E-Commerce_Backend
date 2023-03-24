@@ -5,6 +5,7 @@ using ECommerceBE.Application.Enums;
 using ECommerceBE.Application.Features.Commands.Product.CreateProduct;
 using ECommerceBE.Application.Features.Commands.Product.RemoveProduct;
 using ECommerceBE.Application.Features.Commands.Product.UpdateProduct;
+using ECommerceBE.Application.Features.Commands.Product.UpdateStockQrCodeToProduct;
 using ECommerceBE.Application.Features.Commands.ProductImageFile.ChangeShowcaseImage;
 using ECommerceBE.Application.Features.Commands.ProductImageFile.RemoveProductImage;
 using ECommerceBE.Application.Features.Commands.ProductImageFile.UploadProductImage;
@@ -122,6 +123,14 @@ namespace ECommerceBE.API.Controllers
 
             //qr kodu png olarak gönderdiğimiz için return Ok yerine Return File olarak döndük.
             return File(data, "image/png");
+        }
+
+        [HttpPut("qrcode")]
+        public async Task<IActionResult> UpdateStockQrCodeToProduct(UpdateStockQrCodeToProductCommandRequest updateStockQrCodeToProductCommandRequest)
+        {
+            UpdateStockQrCodeToProductCommandResponse response = await _mediator.Send(updateStockQrCodeToProductCommandRequest);
+
+            return Ok(response);
         }
     }
 }
