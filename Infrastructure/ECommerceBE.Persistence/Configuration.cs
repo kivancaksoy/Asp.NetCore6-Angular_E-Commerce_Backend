@@ -9,9 +9,17 @@ namespace ECommerceBE.Persistence
             get
             {
                 ConfigurationManager configurationManager = new ConfigurationManager();
-                configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/ECommerceBE.API"));
-                configurationManager.AddJsonFile("appsettings.json");
-                return configurationManager.GetConnectionString("PostgreSQL");
+                try
+                {
+                    configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/ECommerceBE.API"));
+                    configurationManager.AddJsonFile("appsettings.json");
+                    return configurationManager.GetConnectionString("PostgreSQL");
+                }
+                catch
+                {
+                    configurationManager.AddJsonFile("appsettings.Production.json");
+                    return configurationManager.GetConnectionString("PostgreSQL");
+                }
             }
         }
     }
